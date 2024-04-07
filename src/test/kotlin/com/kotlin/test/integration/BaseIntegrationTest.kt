@@ -93,25 +93,6 @@ internal class BaseIntegrationTest: DescribeSpec() {
             baseProjectionNode: BaseProjectionNode
     ) = GraphQLQueryRequest(graphQLQuery, baseProjectionNode)
 
-    protected fun getExtensionErrorType(executionResult: ExecutionResult): String {
-        return executionResult
-                .errors[ErrorTypeConstant.FIRST]
-                .extensions[ErrorTypeConstant.ERROR_TYPE_FIELD]
-                .toString()
-    }
-
-    protected fun getErrorMessage(executionResult: ExecutionResult): String {
-        return executionResult
-            .errors[ErrorTypeConstant.FIRST]
-            .message
-    }
-
-    protected fun getError(executionResult: ExecutionResult): String {
-        return executionResult
-            .errors[ErrorTypeConstant.FIRST]
-            .message
-    }
-
     protected fun <K> makeKeys(vararg keys: K): List<K> {
         return listOf(*keys)
     }
