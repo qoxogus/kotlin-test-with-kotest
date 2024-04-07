@@ -1,0 +1,43 @@
+server:
+  port: 8080
+
+spring:
+  main:
+    http:
+      encoding:
+        charset: UTF-8
+        enabled: on
+        force: on
+
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://localhost:3306/test?useUnicode=true&characterEncoding=utf8serverTimezone=UTC
+    username: root
+    password: 1234
+
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        ddl-auto: validate
+    show-sql: true
+
+  jackson:
+    serialization:
+      INDENT_OUTPUT: true
+
+graphql:
+  voyager:
+    enabled: true
+
+logging:
+  level:
+    org:
+      hibernate:
+        type: TRACE
+      springframework:
+        security: DEBUG
+        web: DEBUG
+        web.filter: DEBUG
+        orm:
+          jpa: DEBUG

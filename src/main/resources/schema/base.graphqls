@@ -1,0 +1,24 @@
+scalar Long
+scalar Short
+scalar DateTime
+
+type Query {
+    member(memberId: Long!): Member
+}
+
+type Mutation {
+    addMember(input: MemberToAddInput!): Member
+}
+
+type Member {
+    id: Long!
+    email: String!
+    name: String!
+    createdDateTime: DateTime!
+    updatedDateTime: DateTime!
+}
+
+input MemberToAddInput {
+    email: String!
+    name: String!
+}

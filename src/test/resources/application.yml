@@ -1,0 +1,33 @@
+server:
+  port: 8080
+
+spring:
+
+  datasource:
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    url: jdbc:tc:mariadb:11.3.2:///test?TC_INITSCRIPT=sql/init.sql
+    username: test
+    password: test
+
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        ddl-auto: validate
+    show-sql: true
+
+  jackson:
+    serialization:
+      INDENT_OUTPUT: true
+
+logging:
+  level:
+    org:
+      hibernate:
+        type: TRACE
+      springframework:
+        security: DEBUG
+        web: DEBUG
+        web.filter: DEBUG
+        orm:
+          jpa: DEBUG
