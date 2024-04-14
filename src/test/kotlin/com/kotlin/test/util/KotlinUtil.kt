@@ -115,7 +115,7 @@ inline fun <reified T> DgsQueryExecutor.executeQueryAndExtractJsonPathAsObject(
     )
 }
 
-fun ExecutionResult.getErrorResponse(): GraphQLErrorResponse =
+fun ExecutionResult.getGraphQLErrorResponse(): GraphQLErrorResponse =
     kotlin.runCatching {
         this.run {
             GraphQLErrorResponse(
@@ -130,5 +130,5 @@ fun ExecutionResult.getErrorResponse(): GraphQLErrorResponse =
     }.onFailure {
         logger.error { this.errors.first().toString() }
     }.getOrElse {
-        throw IllegalArgumentException("failed response mapping string to object", it)
+        throw IllegalArgumentException("failed response mapping executionResult to object", it)
     }

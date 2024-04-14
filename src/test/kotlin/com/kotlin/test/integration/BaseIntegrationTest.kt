@@ -1,6 +1,5 @@
 package com.kotlin.test.integration
 
-import com.kotlin.test.constant.encoding.EncodingConstant
 import com.kotlin.test.constant.error.ErrorTypeConstant
 import com.kotlin.test.integration.response.ErrorResponse
 import com.kotlin.test.integration.response.GraphQLErrorResponse
@@ -8,7 +7,6 @@ import com.netflix.graphql.dgs.DgsQueryExecutor
 import com.netflix.graphql.dgs.client.codegen.BaseProjectionNode
 import com.netflix.graphql.dgs.client.codegen.GraphQLQuery
 import com.netflix.graphql.dgs.client.codegen.GraphQLQueryRequest
-import graphql.ExecutionResult
 import io.kotest.core.annotation.Tags
 import io.kotest.core.spec.Spec
 import io.kotest.core.spec.style.DescribeSpec
@@ -49,7 +47,7 @@ internal class BaseIntegrationTest: DescribeSpec() {
     private fun setMockMvc() {
         this.mockMvc = MockMvcBuilders
                 .webAppContextSetup(webApplicationContext)
-                .addFilter<DefaultMockMvcBuilder>(CharacterEncodingFilter(EncodingConstant.UTF_8, true))
+                .addFilter<DefaultMockMvcBuilder>(CharacterEncodingFilter(Charsets.UTF_8.name(), true))
 //                .apply<DefaultMockMvcBuilder>(springSecurity())
                 .alwaysDo<DefaultMockMvcBuilder> { MockMvcResultHandlers.print() }
                 .build()

@@ -67,7 +67,7 @@ internal class MemberDataFetcherIntegrationTest: BaseIntegrationTest() {
                             graphQLQuery = graphQLQuery,
                             baseProjectionNode = memberToAddProjectionRoot
                         )
-                    ).getErrorResponse()
+                    ).getGraphQLErrorResponse()
 
                     verifyGraphQLErrorResponse(
                         graphQLErrorResponse = graphQLErrorResponse,
@@ -121,7 +121,7 @@ internal class MemberDataFetcherIntegrationTest: BaseIntegrationTest() {
                             graphQLQuery = graphQLQuery,
                             baseProjectionNode = memberProjectionRoot
                         )
-                    ).getErrorResponse()
+                    ).getGraphQLErrorResponse()
 
                     verifyGraphQLErrorResponse(
                         graphQLErrorResponse = graphQLErrorResponse,
