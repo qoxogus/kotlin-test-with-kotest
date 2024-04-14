@@ -1,9 +1,8 @@
 package com.kotlin.test.integration.member.datafetcher
 
-import com.kotlin.test.constant.error.ErrorMessageConstant
 import com.kotlin.test.constant.error.ErrorTypeConstant
+import com.kotlin.test.constant.exception.ExceptionConstant
 import com.kotlin.test.constant.member.MemberConstant
-import com.kotlin.test.dto.member.MemberDto
 import com.kotlin.test.generated.client.AddMemberGraphQLQuery
 import com.kotlin.test.generated.client.AddMemberProjectionRoot
 import com.kotlin.test.generated.client.MemberGraphQLQuery
@@ -11,16 +10,9 @@ import com.kotlin.test.generated.client.MemberProjectionRoot
 import com.kotlin.test.generated.types.Member
 import com.kotlin.test.generated.types.MemberToAddInput
 import com.kotlin.test.integration.BaseIntegrationTest
-import com.kotlin.test.integration.response.ErrorResponse
-import com.kotlin.test.integration.response.GraphQLErrorResponse
 import com.kotlin.test.util.*
-import com.netflix.graphql.dgs.client.codegen.GraphQLQuery
-import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import io.kotest.matchers.string.shouldContain
-import org.springframework.http.HttpStatus
-import org.springframework.web.util.NestedServletException
 
 internal class MemberDataFetcherIntegrationTest: BaseIntegrationTest() {
 
@@ -69,7 +61,7 @@ internal class MemberDataFetcherIntegrationTest: BaseIntegrationTest() {
 
                 val graphQLQuery = makeAddMemberGraphQLQuery(memberToAddInput)
 
-                it("IllegalArgumentException이 발생한다") {
+                it("IllegalArgumentException(Already Exists Email)이 발생한다") {
                     val graphQLErrorResponse = dgsQueryExecutor.executeQuery(
                         graphQLQueryRequest = makeGraphQLQueryRequest(
                             graphQLQuery = graphQLQuery,
@@ -77,20 +69,17 @@ internal class MemberDataFetcherIntegrationTest: BaseIntegrationTest() {
                         )
                     ).getErrorResponse()
 
-                    val illegalArgumentException =
-                        IllegalArgumentException(ErrorMessageConstant.MEMBER_ALREADY_EXISTS_ERROR_MESSAGE)
-
                     verifyGraphQLErrorResponse(
                         graphQLErrorResponse = graphQLErrorResponse,
                         graphQLQuery = graphQLQuery,
                         expectedErrorType = ErrorTypeConstant.EXTENSIONS_ERROR_TYPE_INTERNAL,
-                        expectedException = illegalArgumentException,
+                        expectedException = ExceptionConstant.MEMBER_ALREADY_EXISTS_EXCEPTION,
                     )
                 }
             }
         }
 
-        describe("Query] getById") {
+        describe("[Query] getById") {
             val memberProjectionRoot = MemberProjectionRoot<Nothing, Nothing>()
                 .id()
                 .email()
@@ -126,7 +115,7 @@ internal class MemberDataFetcherIntegrationTest: BaseIntegrationTest() {
 
                 val graphQLQuery = makeMemberGraphQLQuery(notFoundMemberId)
 
-                it("IllegalArgumentException이 발생한다") {
+                it("IllegalArgumentException(Not Found Member)이 발생한다") {
                     val graphQLErrorResponse = dgsQueryExecutor.executeQuery(
                         graphQLQueryRequest = makeGraphQLQueryRequest(
                             graphQLQuery = graphQLQuery,
@@ -134,14 +123,11 @@ internal class MemberDataFetcherIntegrationTest: BaseIntegrationTest() {
                         )
                     ).getErrorResponse()
 
-                    val illegalArgumentException =
-                        IllegalArgumentException(ErrorMessageConstant.MEMBER_NOT_FOUND_ERROR_MESSAGE)
-
                     verifyGraphQLErrorResponse(
                         graphQLErrorResponse = graphQLErrorResponse,
                         graphQLQuery = graphQLQuery,
                         expectedErrorType = ErrorTypeConstant.EXTENSIONS_ERROR_TYPE_INTERNAL,
-                        expectedException = illegalArgumentException,
+                        expectedException = ExceptionConstant.MEMBER_NOT_FOUND_EXCEPTION,
                     )
                 }
             }

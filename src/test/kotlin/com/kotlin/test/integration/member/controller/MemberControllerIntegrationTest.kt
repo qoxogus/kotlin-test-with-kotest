@@ -1,6 +1,7 @@
 package com.kotlin.test.integration.member.controller
 
-import com.kotlin.test.constant.error.ErrorMessageConstant
+import com.kotlin.test.constant.exception.ExceptionConstant
+import com.kotlin.test.constant.exception.ExceptionMessageConstant
 import com.kotlin.test.constant.member.MemberConstant
 import com.kotlin.test.constant.url.UrlConstant
 import com.kotlin.test.dto.member.MemberDto
@@ -11,6 +12,7 @@ import com.kotlin.test.util.expectStatus
 import com.kotlin.test.util.getWithPathVariable
 import com.kotlin.test.util.postWithBody
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.springframework.http.HttpStatus
@@ -19,7 +21,7 @@ import org.springframework.web.util.NestedServletException
 internal class MemberControllerIntegrationTest: BaseIntegrationTest() {
 
     init {
-        describe("[REST] addMember") {
+        describe("[REST | POST] addMember (/api/v1/members)") {
             val memberToAddUrl = UrlConstant.MEMBER_TO_ADD_URL
 
             val keys = makeKeys(
@@ -54,8 +56,8 @@ internal class MemberControllerIntegrationTest: BaseIntegrationTest() {
                     MemberConstant.EXISTING_MEMBER_NAME
                 )
 
-                it("IllegalArgumentException이 발생한다") {
-                    val exception = shouldThrow<NestedServletException> {
+                it("IllegalArgumentException(Already Exists Email)이 발생한다") {
+                    val actualException = shouldThrowExactly<NestedServletException> {
                         val internalServerError = HttpStatus.INTERNAL_SERVER_ERROR
 
                         val errorResponse = mockMvc.postWithBody(
@@ -71,15 +73,15 @@ internal class MemberControllerIntegrationTest: BaseIntegrationTest() {
                         )
                     }
 
-                    val illegalArgumentException =
-                        IllegalArgumentException(ErrorMessageConstant.MEMBER_ALREADY_EXISTS_ERROR_MESSAGE)
-
-                    verifyException(actualException = exception, expectedException = illegalArgumentException)
+                    verifyException(
+                        actualException = actualException,
+                        expectedException = ExceptionConstant.MEMBER_ALREADY_EXISTS_EXCEPTION
+                    )
                 }
             }
         }
 
-        describe("[REST] getById") {
+        describe("[REST | GET] getById (/api/v1/members/{memberId})") {
             val memberToGetByIdUrl = UrlConstant.MEMBER_TO_GET_BY_ID_URL
 
             context("존재하는 회원이라면") {
@@ -104,8 +106,8 @@ internal class MemberControllerIntegrationTest: BaseIntegrationTest() {
             context("존재하지 않는 회원이라면") {
                 val notFoundMemberId = MemberConstant.NOT_FOUND_MEMBER_ID
 
-                it("IllegalArgumentException이 발생한다") {
-                    val exception = shouldThrow<NestedServletException> {
+                it("IllegalArgumentException(Not Found Member)이 발생한다") {
+                    val actualException = shouldThrowExactly<NestedServletException> {
                         val internalServerError = HttpStatus.INTERNAL_SERVER_ERROR
 
                         val errorResponse = mockMvc.getWithPathVariable(
@@ -122,10 +124,10 @@ internal class MemberControllerIntegrationTest: BaseIntegrationTest() {
                         )
                     }
 
-                    val illegalArgumentException =
-                        IllegalArgumentException(ErrorMessageConstant.MEMBER_NOT_FOUND_ERROR_MESSAGE)
-
-                    verifyException(actualException = exception, expectedException = illegalArgumentException)
+                    verifyException(
+                        actualException = actualException,
+                        expectedException = ExceptionConstant.MEMBER_NOT_FOUND_EXCEPTION
+                    )
                 }
             }
         }
